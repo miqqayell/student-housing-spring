@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead('Database Error')}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5">
+    <div class="alert alert-danger shadow-sm">
+        <h3 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Database Error</h3>
+        <p class="lead" th:text="${errorMessage}">Error Message</p>
+        <hr>
+        <p class="mb-0 small text-muted">
+            Details: <span th:text="${technicalDetails}">Technical Details</span>
+        </p>
+    </div>
+    <a href="/home" class="btn btn-primary mt-3">Go Home</a>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

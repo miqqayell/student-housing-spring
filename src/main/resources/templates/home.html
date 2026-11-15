@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head th:replace="~{fragments/head :: commonHead(#{home.title})}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5">
+  <!-- Hero Section -->
+  <div class="row align-items-stretch rounded-3 border shadow-lg overflow-hidden bg-white mb-5" style="min-height: 400px;">
+    <div class="col-lg-7 p-5 d-flex flex-column justify-content-center">
+      <h1 class="display-4 fw-bold lh-1 text-body-emphasis" th:text="#{home.welcome}">Welcome</h1>
+      <p class="lead mt-3" th:text="#{home.instructions}">Use the menu to navigate.</p>
+
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+        <a th:href="@{/students}" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">
+          <i class="bi bi-people-fill me-2"></i> Browse Students
+        </a>
+        <a th:href="@{/units}" class="btn btn-outline-secondary btn-lg px-4">
+          <i class="bi bi-houses-fill me-2"></i> Browse Units
+        </a>
+      </div>
+    </div>
+
+    <!-- Campus Life Image -->
+    <div class="col-lg-5 p-0 d-none d-lg-block overflow-hidden position-relative hover-card">
+      <a th:href="@{/campus-life}" class="d-block h-100 w-100" title="View Campus Life">
+        <img src="https://placehold.co/600x800/580012/FFF?text=Campus+Life&font=playfair"
+             alt="Campus Life"
+             class="img-fluid h-100 w-100"
+             style="object-fit: cover;">
+      </a>
+    </div>
+  </div>
+
+  <!-- Quick Actions (Updated Buttons) -->
+  <div sec:authorize="hasRole('ADMIN')" class="row mb-5">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm border-0 bg-light">
+        <div class="card-body text-center p-4">
+          <h3 class="card-title text-muted"><i class="bi bi-person-plus-fill display-4 d-block mb-2"></i></h3>
+          <h5>New Application</h5>
+          <p class="text-muted">Register a new student into the system.</p>
+          <a th:href="@{/students/add}" class="btn btn-primary px-4 fw-bold stretched-link">
+            Add Student
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm border-0 bg-light">
+        <div class="card-body text-center p-4">
+          <h3 class="card-title text-muted"><i class="bi bi-house-add-fill display-4 d-block mb-2"></i></h3>
+          <h5>New Property</h5>
+          <p class="text-muted">List a new housing unit or dorm.</p>
+          <a th:href="@{/units/add}" class="btn btn-primary px-4 fw-bold stretched-link">
+            Add Unit
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

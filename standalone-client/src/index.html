@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Housing — Client</title>
+  </head>
+  <body>
+    <!-- Bootstrap navbar (layout component). SPA navigation is handled by our own JS. -->
+    <nav class="navbar navbar-expand bg-primary" data-bs-theme="dark">
+      <div class="container">
+        <span class="navbar-brand fw-bold"><i class="bi bi-buildings-fill me-2"></i>StudentHousing</span>
+        <ul class="navbar-nav flex-row gap-3">
+          <li class="nav-item">
+            <a href="#" class="nav-link" id="nav-search" data-target="search-section">Search</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" id="nav-add" data-target="add-section">Add</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container app py-4">
+      <!-- ============ SEARCH SECTION ============ -->
+      <section id="search-section" class="app-section">
+        <h1 class="h4">Search students</h1>
+        <form id="search-form" class="row g-2 mb-3">
+          <div class="col flex-grow-1">
+            <input
+              type="text"
+              id="search-input"
+              class="form-control"
+              placeholder="Search by name (e.g. ali)…"
+              autocomplete="off"
+            />
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </form>
+        <div id="search-results"></div>
+      </section>
+
+      <!-- ============ ADD SECTION ============ -->
+      <section id="add-section" class="app-section">
+        <h1 class="h4">Add a housing unit</h1>
+        <div id="add-message"></div>
+        <form id="add-form" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="address">Address</label>
+            <input type="text" id="address" name="address" class="form-control" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="unitType">Unit type</label>
+            <input type="text" id="unitType" name="unitType" class="form-control" value="Apartment" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="capacity">Capacity</label>
+            <input type="number" id="capacity" name="capacity" class="form-control" min="1" value="1" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="rent">Rent (€)</label>
+            <input type="number" id="rent" name="rent" class="form-control" min="0" step="0.01" value="500" required />
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <div class="form-check">
+              <input type="checkbox" id="furnished" name="furnished" class="form-check-input" />
+              <label class="form-check-label" for="furnished">Furnished</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Add unit</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="py-3 border-top">
+      <div class="container text-center small">StudentHousing — Client — Mikayel Ghalumyan</div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonHead(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title}">Student Housing</title>
+
+  <!-- Week 11: bundled by webpack from src/main/frontend -->
+  <!-- Includes customized Bootstrap, Bootstrap Icons, and our SCSS. -->
+  <link rel="stylesheet" th:href="@{/built/bundle.css}">
+  <script defer th:src="@{/built/bundle.js}"></script>
+
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+</body>
+</html>

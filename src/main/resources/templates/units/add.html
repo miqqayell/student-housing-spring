@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead(#{addUnit.title})}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h4 class="mb-0" th:text="#{addUnit.heading}">Add Unit</h4>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/units/add}" th:object="${housingUnitDto}" method="post">
+
+            <div class="mb-3">
+              <label class="form-label" th:text="#{addUnit.address}">Address</label>
+              <input type="text" class="form-control" th:field="*{address}"
+                     th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''">
+              <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Error</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Unit Type</label>
+              <select class="form-select" th:field="*{unitType}"
+                      th:classappend="${#fields.hasErrors('unitType')} ? 'is-invalid' : ''">
+                <option value="" selected>Select a type...</option>
+                <option value="APARTMENT">Apartment</option>
+                <option value="STUDIO">Studio</option>
+                <option value="SHARED_HOUSE">Shared House</option>
+                <option value="DORM">Dorm (Student Room)</option>
+              </select>
+              <div class="invalid-feedback" th:if="${#fields.hasErrors('unitType')}" th:errors="*{unitType}">Error</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Image URL</label>
+              <input type="text" class="form-control" th:field="*{imageUrl}" placeholder="https://..."
+                     th:classappend="${#fields.hasErrors('imageUrl')} ? 'is-invalid' : ''">
+              <div class="invalid-feedback" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">Error</div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" th:text="#{addUnit.capacity}">Capacity</label>
+                <input type="number" class="form-control" th:field="*{capacity}"
+                       th:classappend="${#fields.hasErrors('capacity')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}">Error</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" th:text="#{addUnit.rent}">Rent</label>
+                <div class="input-group has-validation">
+                  <span class="input-group-text">€</span>
+                  <input type="number" step="0.01" class="form-control" th:field="*{rent}"
+                         th:classappend="${#fields.hasErrors('rent')} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${#fields.hasErrors('rent')}" th:errors="*{rent}">Error</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 form-check form-switch">
+              <input type="checkbox" class="form-check-input" th:field="*{furnished}">
+              <label class="form-check-label" th:text="#{addUnit.furnished}">Furnished</label>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary" th:text="#{addUnit.save}">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

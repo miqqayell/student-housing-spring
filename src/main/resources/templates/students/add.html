@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead(#{addStudent.title})}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h4 class="mb-0" th:text="#{addStudent.heading}">Add Student</h4>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/students/add}" th:object="${studentForm}" method="post">
+
+            <!-- Name -->
+            <div class="mb-3">
+              <label class="form-label" th:text="#{addStudent.name}">Name</label>
+              <input type="text" class="form-control" th:field="*{name}"
+                     th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
+              <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</div>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="mb-3">
+              <label class="form-label" th:text="#{addStudent.birthDate}">Birth Date</label>
+              <input type="date" class="form-control" th:field="*{birthDate}"
+                     th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid' : ''">
+              <div class="invalid-feedback" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Error</div>
+            </div>
+
+            <!-- Year & GPA -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" th:text="#{addStudent.yearOfStudy}">Year</label>
+                <input type="number" class="form-control" th:field="*{yearOfStudy}"
+                       th:classappend="${#fields.hasErrors('yearOfStudy')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('yearOfStudy')}" th:errors="*{yearOfStudy}">Error</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" th:text="#{addStudent.gpa}">GPA</label>
+                <input type="number" step="0.01" class="form-control" th:field="*{gpa}"
+                       th:classappend="${#fields.hasErrors('gpa')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('gpa')}" th:errors="*{gpa}">Error</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Profile Image URL</label>
+              <input type="text" class="form-control" th:field="*{profileImageUrl}" placeholder="https://..."
+                     th:classappend="${#fields.hasErrors('profileImageUrl')} ? 'is-invalid' : ''">
+            </div>
+
+            <!-- International Checkbox -->
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" th:field="*{international}">
+              <label class="form-check-label" th:text="#{addStudent.international}">International</label>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Housing Assignment (New for Week 8/10) -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Assign Housing Unit (Optional)</label>
+              <select class="form-select" th:field="*{linkUnitId}">
+                <option value="">-- Select a Unit --</option>
+                <option th:each="u : ${allUnits}"
+                        th:value="${u.id}"
+                        th:text="${u.address} + ' (Capacity: ' + ${u.capacity} + ')'">Unit Address</option>
+              </select>
+              <div class="form-text">Selecting a unit will create a standard 1-year active lease immediately.</div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary" th:text="#{addStudent.save}">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

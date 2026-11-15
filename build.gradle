@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    // Week 11: embedded npm frontend (src/main/frontend) built via Gradle.
+    id 'com.github.node-gradle.node' version '7.1.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // Week 4: Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// =====================================================================
+// Week 11 — embedded frontend (npm + webpack)
+//
+// The node-gradle plugin downloads Node when not present and exposes
+// `npmInstall` for the project at src/main/frontend. A custom `frontendBuild`
+// task runs `npm run build`, which webpack bundles into
+// src/main/resources/static/built/bundle.{js,css}. Hooking it into
+// `processResources` ensures the bundle is present whenever Spring's main
+// resources are assembled (bootRun, bootJar, test).
+// =====================================================================
+node {
+    download = true
+    version = '20.18.0'
+    nodeProjectDir = file('src/main/frontend')
+}
+
+tasks.register('frontendBuild', com.github.gradle.node.npm.task.NpmTask) {
+    group = 'frontend'
+    description = 'Builds the embedded frontend bundle (npm run build).'
+    dependsOn 'npmInstall'
+    args = ['run', 'build']
+
+    // Incremental build: only re-run when something the frontend depends on changed.
+    inputs.dir 'src/main/frontend/src'
+    inputs.files 'src/main/frontend/package.json',
+                 'src/main/frontend/package-lock.json',
+                 'src/main/frontend/webpack.config.js'
+    outputs.dir 'src/main/resources/static/built'
+}
+
+tasks.named('processResources') {
+    dependsOn 'frontendBuild'
+}

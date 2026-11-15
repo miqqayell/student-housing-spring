@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead('Campus Life')}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- Header -->
+<div class="bg-bordeaux text-white py-5 mb-5" style="margin-top: -1.5rem; border-top: 5px solid #d4af37;">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Life on Campus</h1>
+        <p class="lead mb-0">More than just a place to sleep.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Intro Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <!-- Title changed to Bordeaux (#580012) -->
+            <h2 class="fw-bold" style="color: #580012;">A Vibrant Community</h2>
+
+            <!-- Updated Text -->
+            <p class="lead text-muted">
+                Our student housing isn't just about rooms; it's about connection. From shared study spaces to weekend events, you'll find plenty of opportunities to meet people and make lifelong friends.
+            </p>
+            <p>
+                Whether you prefer the quiet focus of our study halls or the energy of our common rooms, there is a space here for you.
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=400&fit=crop"
+                 class="img-fluid rounded shadow" alt="Students studying">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Features Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4 hover-card">
+                <i class="bi bi-wifi display-4 text-info mb-3"></i>
+                <h4>High-Speed WiFi</h4>
+                <p class="text-muted">Stay connected seamlessly with our campus-wide gigabit fiber network, perfect for streaming and studying.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4 hover-card">
+                <i class="bi bi-bicycle display-4 text-success mb-3"></i>
+                <h4>Secure Bike Storage</h4>
+                <p class="text-muted">We provide covered, secure storage for your bike at every housing unit, making your commute worry-free.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4 hover-card">
+                <i class="bi bi-cup-hot display-4 text-warning mb-3"></i>
+                <h4>Social Common Areas</h4>
+                <p class="text-muted">Our modern kitchens and lounges are designed to bring people together over coffee, meals, and conversation.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

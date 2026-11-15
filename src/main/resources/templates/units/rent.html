@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead('Rent Unit')}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-bordeaux text-white">
+                    <h4 class="mb-0">Rent <span th:text="${unit.address}">Unit</span></h4>
+                </div>
+                <div class="card-body">
+
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <!--/* Bound to LeaseFormDto, not to the Lease entity. */-->
+                    <form th:action="@{/units/{id}/rent(id=${unit.id})}" th:object="${lease}" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select Student</label>
+                            <select class="form-select" th:field="*{studentId}"
+                                    th:classappend="${#fields.hasErrors('studentId')} ? 'is-invalid' : ''">
+                                <option value="">-- Choose a Student --</option>
+                                <option th:each="student : ${students}"
+                                        th:value="${student.id}"
+                                        th:text="${student.name} + ' (Year ' + ${student.yearOfStudy} + ')'">
+                                    Student Name
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}">Error</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" th:field="*{startDate}"
+                                       th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">Error</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" th:field="*{endDate}"
+                                       th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">Error</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Deposit (€)</label>
+                            <input type="number" class="form-control" th:field="*{deposit}" step="0.01"
+                                   th:classappend="${#fields.hasErrors('deposit')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('deposit')}" th:errors="*{deposit}">Error</div>
+                            <div class="form-text">Leave empty to use the standard € 500 deposit.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Confirm Lease</button>
+                            <a th:href="@{/units/{id}(id=${unit.id})}" class="btn btn-secondary">Cancel</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

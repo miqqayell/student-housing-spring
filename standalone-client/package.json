@@ -1,0 +1,30 @@
+{
+  "name": "student-housing-client",
+  "version": "1.0.0",
+  "description": "Week 10 client app for the Student Housing Spring Boot REST API (search + add).",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint src",
+    "format": "dprint fmt"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "css-loader": "^7.1.2",
+    "dprint": "^0.47.2",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "html-webpack-plugin": "^5.6.3",
+    "sass": "^1.80.4",
+    "sass-loader": "^16.0.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}

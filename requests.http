@@ -1,0 +1,163 @@
+### =====================================================================
+### Web API request messages.
+###
+### The state-changing student endpoints require an authenticated session and
+### a CSRF token. Sign in first with the request below; IntelliJ keeps the
+### JSESSIONID cookie in its cookie jar for the requests that follow.
+### =====================================================================
+
+### Sign in as advisor1 (owns students 1 and 2) -- 302 Found
+POST http://localhost:8080/login
+Content-Type: application/x-www-form-urlencoded
+
+username=advisor1&password=advisor123
+
+### Sign in as admin -- 302 Found
+POST http://localhost:8080/login
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=admin123
+
+
+### ---------------------------------------------------------------------
+### GET a single student
+### ---------------------------------------------------------------------
+
+### Fetching one student - OK (200)
+GET http://localhost:8080/api/students/1
+Accept: application/json
+
+### Fetching one student - Not Found (404)
+GET http://localhost:8080/api/students/999
+Accept: application/json
+
+
+### ---------------------------------------------------------------------
+### GET the student collection (search) - used by the Client project
+### ---------------------------------------------------------------------
+
+### Searching for students - OK (200, one or more matches)
+GET http://localhost:8080/api/students?name=ali
+Accept: application/json
+
+### Searching for students - OK (200, empty array)
+GET http://localhost:8080/api/students?name=zzzzz
+Accept: application/json
+
+### Listing all students - OK (200, no query parameter)
+GET http://localhost:8080/api/students
+Accept: application/json
+
+
+### ---------------------------------------------------------------------
+### POST a new student
+### ---------------------------------------------------------------------
+
+### Creating a student - Created (201, note the Location response header)
+POST http://localhost:8080/api/students
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Eve Developer",
+  "yearOfStudy": 1
+}
+
+### Creating a student - Bad Request (400: blank name and yearOfStudy > 7)
+POST http://localhost:8080/api/students
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "",
+  "yearOfStudy": 10
+}
+
+
+### ---------------------------------------------------------------------
+### PATCH a student's GPA
+### ---------------------------------------------------------------------
+
+### Updating student GPA - OK (200, signed in as the owning advisor or admin)
+PATCH http://localhost:8080/api/students/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "gpa": 3.9
+}
+
+### Updating student GPA - Bad Request (400: GPA > 4.0)
+PATCH http://localhost:8080/api/students/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "gpa": 5.5
+}
+
+### Updating student GPA - Forbidden (403: sign in as advisor1, who does not own student 3)
+PATCH http://localhost:8080/api/students/3
+Content-Type: application/json
+Accept: application/json
+
+{
+  "gpa": 3.9
+}
+
+### Updating student GPA - Not Found (404)
+PATCH http://localhost:8080/api/students/999
+Content-Type: application/json
+Accept: application/json
+
+{
+  "gpa": 3.9
+}
+
+
+### ---------------------------------------------------------------------
+### DELETE a student
+### ---------------------------------------------------------------------
+
+### Deleting a student - No Content (204, signed in as the owning advisor or admin)
+DELETE http://localhost:8080/api/students/2
+Accept: application/json
+
+### Deleting a student - Forbidden (403: sign in as advisor1, who does not own student 3)
+DELETE http://localhost:8080/api/students/3
+Accept: application/json
+
+### Deleting a student - Not Found (404)
+DELETE http://localhost:8080/api/students/999
+Accept: application/json
+
+
+### ---------------------------------------------------------------------
+### POST a housing unit (week 10: permitAll + CSRF disabled for the Client)
+### ---------------------------------------------------------------------
+
+### Creating a housing unit - Created (201, note the Location response header)
+POST http://localhost:8080/api/units
+Content-Type: application/json
+Accept: application/json
+
+{
+  "address": "99 Client Way",
+  "capacity": 3,
+  "rent": 700.0,
+  "unitType": "STUDIO",
+  "furnished": true,
+  "imageUrl": "https://placehold.co/300x200?text=Client+Unit"
+}
+
+### Creating a housing unit - Bad Request (400: blank address, capacity < 1, negative rent)
+POST http://localhost:8080/api/units
+Content-Type: application/json
+Accept: application/json
+
+{
+  "address": "",
+  "capacity": 0,
+  "rent": -5.0,
+  "unitType": ""
+}

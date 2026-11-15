@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head th:replace="~{fragments/head :: commonHead(#{students.title})}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!--/*
+  The model holds StudentListItemDto objects, not entities. Whether the GPA may
+  be shown and whether this user may manage the record was already decided
+  server side, so this page never inspects the logged-in user's name and never
+  touches a lazy association.
+*/-->
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-start" th:text="#{students.title}">Students</h2>
+    <a sec:authorize="isAuthenticated()" th:href="@{/students/add}" class="btn btn-success">
+      <i class="bi bi-plus-circle me-1"></i> Add
+    </a>
+  </div>
+
+  <div class="mb-4">
+    <span class="me-2 fw-bold text-muted">Quick Filters:</span>
+    <a th:href="@{/students}" class="btn btn-outline-secondary btn-sm me-1">All</a>
+    <a th:href="@{/students/international}" class="btn btn-outline-info btn-sm me-1">
+      <i class="bi bi-globe"></i> International
+    </a>
+    <a th:href="@{/students/top}" class="btn btn-outline-warning btn-sm">
+      <i class="bi bi-star-fill"></i> Top GPA
+    </a>
+  </div>
+
+  <h4 th:if="${filterTitle}" th:text="${filterTitle}" class="text-primary mb-3">Filter Title</h4>
+
+  <div class="card p-3 mb-4 bg-light border-0">
+    <form th:action="@{/students}" method="get" class="row g-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" name="nameContains" th:placeholder="#{students.nameContains}" th:value="${nameContains}">
+      </div>
+      <div class="col-md-3">
+        <input type="number" class="form-control" name="minYear" th:placeholder="#{students.minYear}" th:value="${minYear}">
+      </div>
+      <div class="col-md-3">
+        <input type="date" class="form-control" name="bornBefore" th:value="${bornBefore}">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100" th:text="#{common.filter}">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <div class="col" th:each="s : ${students}">
+      <div class="card h-100 hover-card shadow-sm">
+        <img th:src="${s.profileImageUrl != null ? s.profileImageUrl : 'https://placehold.co/300x200?text=Student'}" class="card-img-top" alt="Student" style="height: 200px; object-fit: cover;">
+
+        <div class="card-body">
+          <h5 class="card-title" th:text="${s.name}">Name</h5>
+          <p class="card-text text-muted mb-1">
+            <i class="bi bi-mortarboard-fill text-warning me-1"></i>
+            Year: <span th:text="${s.yearOfStudy}">1</span>
+          </p>
+
+          <div class="mt-2 mb-2">
+            <span th:if="${s.gpaVisible}" class="badge bg-secondary" style="font-size: 0.9rem;">
+              GPA: <span th:text="${s.gpa != null ? s.gpa : '-'}">3.5</span>
+            </span>
+            <span th:unless="${s.gpaVisible}" class="badge bg-secondary" style="font-size: 0.9rem;">
+              <i class="bi bi-lock-fill"></i> GPA: Hidden
+            </span>
+          </div>
+
+          <span th:if="${s.highGpa}" class="badge bg-success mb-2">High GPA</span>
+          <span th:if="${s.international}" class="badge bg-info text-dark mb-2">International</span>
+
+          <!--/*
+            Inline GPA editing: calls PATCH /api/students/{id} with fetch and
+            updates the record without reloading the page. Only rendered for
+            records this user may manage; the backend enforces the same rule.
+          */-->
+          <div th:if="${s.manageable}" class="input-group input-group-sm mt-2">
+            <input type="number" step="0.1" min="0" max="4" class="form-control"
+                   th:id="'gpa-input-' + ${s.id}" th:value="${s.gpa}" aria-label="New GPA">
+            <button class="btn btn-outline-primary" type="button"
+                    th:onclick="'updateGpaAJAX(' + ${s.id} + ')'">
+              <i class="bi bi-save"></i> Save GPA
+            </button>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+          <div>
+            <a th:href="@{/students/{id}(id=${s.id})}" class="btn btn-outline-primary btn-sm">
+              View Details
+            </a>
+            <button type="button" class="btn btn-outline-info btn-sm ms-1" th:onclick="'quickViewAJAX(' + ${s.id} + ')'">
+              <i class="bi bi-eye"></i> Quick View
+            </button>
+          </div>
+
+          <button th:if="${s.manageable}" type="button" class="btn btn-outline-danger btn-sm"
+                  th:onclick="'deleteStudentAJAX(' + ${s.id} + ', this)'">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center text-muted">
+    <p th:text="#{students.count(${#lists.size(students)})}">Count</p>
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<!-- Week 11: quickViewAJAX / deleteStudentAJAX were migrated to
+     src/main/frontend/src/js/students-actions.js and exposed on window so the
+     inline th:onclick handlers above keep working. -->
+</body>
+</html>

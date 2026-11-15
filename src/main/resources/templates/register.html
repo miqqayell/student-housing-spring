@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead('Register')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5" style="max-width: 500px;">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h3 class="card-title text-center mb-4">Create an Account</h3>
+
+      <form th:action="@{/register}" th:object="${userDto}" method="post">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" th:field="*{username}" th:errorclass="is-invalid">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" th:field="*{email}" th:errorclass="is-invalid">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Age</label>
+          <input type="number" class="form-control" th:field="*{age}" th:errorclass="is-invalid">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid">
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 fw-bold">Register</button>
+
+        <div class="text-center mt-3">
+          <small>Already have an account? <a th:href="@{/login}">Log in here</a></small>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

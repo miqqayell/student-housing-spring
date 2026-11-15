@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: commonHead('Login')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5" style="max-width: 400px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title text-center mb-4">Login</h3>
+
+      <div th:if="${param.error}" class="alert alert-danger">Invalid username or password.</div>
+      <div th:if="${param.logout}" class="alert alert-success">You have been logged out.</div>
+      <div th:if="${param.registered}" class="alert alert-success">Registration successful! Please log in.</div>
+
+      <div class="text-center mt-3 mb-3">
+        <small>Don't have an account? <a th:href="@{/register}">Sign up here</a></small>
+      </div>
+
+      <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required autofocus>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+      </form>
+
+      <hr>
+      <div class="text-center text-muted small">
+        <p class="mb-0"><strong>Test Accounts:</strong></p>
+        <p class="mb-0">admin / admin123 &mdash; administrator</p>
+        <p class="mb-0">advisor1 / advisor123 &mdash; advisor</p>
+        <p class="mb-0">advisor2 / advisor123 &mdash; advisor</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

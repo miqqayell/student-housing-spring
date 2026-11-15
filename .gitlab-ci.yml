@@ -1,0 +1,77 @@
+# GitLab CI pipeline for the Student Housing Spring Boot project.
+#
+# Two stages / two jobs:
+#   * build : compiles main + test sources (no tests run)
+#   * test  : runs the full test suite against a PostgreSQL service and
+#             publishes a JUnit report visible on the GitLab pipeline page.
+#
+# Build artifacts (compiled classes) and the Gradle dependency cache are reused
+# between runs/stages so the pipeline does not download/compile everything twice.
+
+stages:
+  - build
+  - test
+
+# Keep the Gradle home inside the project dir so it can be cached, and disable
+# the daemon (each CI job is a fresh container, a daemon only wastes memory).
+variables:
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+# CI caching: reuse downloaded dependencies and the wrapper across pipelines.
+# Week 11: also cache the Node download from com.github.node-gradle.node and
+# the npm node_modules of the embedded frontend (src/main/frontend).
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .gradle/caches
+    - .gradle/wrapper
+    - .gradle/nodejs
+    - src/main/frontend/node_modules
+
+default:
+  image: eclipse-temurin:21-jdk
+  before_script:
+    - chmod +x ./gradlew
+
+build:
+  stage: build
+  script:
+    - ./gradlew --no-daemon assemble testClasses
+  artifacts:
+    # hand the compiled output to the test stage so it is not rebuilt
+    paths:
+      - build/
+    expire_in: 1 hour
+
+test:
+  stage: test
+  # PostgreSQL service container; reachable at host "postgres" on port 5432.
+  services:
+    - name: postgres:15
+      alias: postgres
+  variables:
+    # credentials/db for the postgres service
+    POSTGRES_DB: student_housing_test
+    POSTGRES_USER: testuser
+    POSTGRES_PASSWORD: testpassword
+    # Override the test datasource so Spring connects to the CI service instead
+    # of localhost:5433. Environment variables outrank application-test.properties,
+    # so locally the tests keep using the Docker Compose DB (localhost:5433).
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/student_housing_test"
+    SPRING_DATASOURCE_USERNAME: testuser
+    SPRING_DATASOURCE_PASSWORD: testpassword
+  before_script:
+    - chmod +x ./gradlew
+    # wait until the postgres service is actually accepting connections
+    - timeout 60 bash -c 'until (echo > /dev/tcp/postgres/5432) 2>/dev/null; do echo "waiting for postgres..."; sleep 1; done'
+  script:
+    - ./gradlew --no-daemon test
+  artifacts:
+    when: always
+    # JUnit report -> shown in the GitLab "Tests" tab of the pipeline
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
+    paths:
+      - build/reports/tests/test/
+    expire_in: 1 week

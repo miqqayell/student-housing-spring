@@ -1,0 +1,26 @@
+services:
+    db:
+        image: postgres:17-alpine
+        container_name: housing-db
+        restart: always
+        environment:
+            POSTGRES_DB: housingdb
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+        ports:
+            - "6432:5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
+
+    postgres-test:
+        image: postgres:15
+        container_name: student_housing_test_db
+        environment:
+            POSTGRES_USER: testuser
+            POSTGRES_PASSWORD: testpassword
+            POSTGRES_DB: student_housing_test
+        ports:
+            - "5433:5432"
+
+volumes:
+    db-data:
