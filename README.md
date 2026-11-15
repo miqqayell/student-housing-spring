@@ -23,13 +23,13 @@ A strict three-layer design. Controllers only talk to services. Services own tra
 
 ```mermaid
 flowchart LR
-    B[Browser<br/>Thymeleaf pages] --> MVC[MVC controllers]
-    C[standalone-client<br/>fetch API] --> API[REST controllers]
-    MVC --> S[Services<br/>@Transactional, @PreAuthorize]
+    B["Browser<br/>Thymeleaf pages"] --> MVC["MVC controllers"]
+    C["standalone-client<br/>fetch API"] --> API["REST controllers"]
+    MVC --> S["Services<br/>@Transactional, @PreAuthorize"]
     API --> S
-    S --> M[MapStruct mappers<br/>entities to DTOs]
-    S --> R[Spring Data repositories<br/>JOIN FETCH, SQL filtering]
-    R --> DB[(PostgreSQL)]
+    S --> M["MapStruct mappers<br/>entities to DTOs"]
+    S --> R["Spring Data repositories<br/>JOIN FETCH, SQL filtering"]
+    R --> DB[("PostgreSQL")]
 ```
 
 Domain: `Student` and `HousingUnit` are linked through a `Lease` entity that carries dates, deposit and status. `Dorm` extends `HousingUnit` with single-table inheritance. `AppUser` advisors own the students they create.
